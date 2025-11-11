@@ -17,9 +17,10 @@ def load_raw(path, ts_col="Timestamp"):
 
 def profile(df):
     """Return numeric describe & % missing."""
-    desc = df.describe().T
-    null_pct = df.isna().mean().mul(100).round(2)
-    return desc, null_pct
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    desc = df[numeric_cols].describe()
+    missing_pct = df[numeric_cols].isna().mean() * 100
+    return desc, missing_pct  # Tuple!
 
 
 # 1. Data-type & distribution helpers
