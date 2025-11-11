@@ -23,6 +23,19 @@ jobs:
       - name: Check Python version
         run: python --version
 
+      - name: Lint code
+        run: |
+          pip install black
+          black --check . || (echo "Run 'black .' locally to fix"; exit 1)
+
       - name: Run tests
         run: |
-          if [ -f tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
+          if [ -d tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
+
+      - name: Execute notebooks (repro check)
+        run: |
+          pip install nbconvert ipykernel
+          for nb in notebooks/*.ipynb; do
+            jupyter nbconvert --to notebook --execute --inplace "$nb" || (echo "Notebook $nb failed"; exit 1)
+          done
+          echo "✅ Notebooks executed successfully"
