@@ -31,3 +31,15 @@ jobs:
       - name: Run tests
         run: |
           if [ -d tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
+
+      - name: Create mock dataset for CI (basic Bumbuna cols)
+        run: |
+          mkdir -p data
+          cat > data/sierraleone-bumbuna.csv << EOF
+Timestamp,GHI,DNI,DHI,TA,RH,WS,WD,WSG
+2023-01-01 00:00:00,0,0,0,22.5,80,2.1,180,3.5
+2023-01-01 12:00:00,800,600,200,28.0,60,1.5,90,2.0
+2023-01-01 18:00:00,100,50,50,26.5,70,2.0,270,3.0
+EOF
+          echo "✅ Mock CSV created (3 rows for EDA test)"
+        || true  # No fail if echo issues
