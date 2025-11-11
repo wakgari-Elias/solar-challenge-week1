@@ -11,18 +11,34 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'    # ✅ FIXED – compatible with pandas 2.1.5
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -r requirements.txt
+          pip install black  # For lint
 
       - name: Check Python version
         run: python --version
 
+      - name: Lint code
+        run: |
+          black --check . || echo "⚠️ Formatting issues—run 'black .' locally"
+
       - name: Run tests
         run: |
-          if [ -f tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
+          if [ -d tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
+
+      - name: Create mock dataset for CI (basic Bumbuna cols)
+        run: |
+          mkdir -p data
+          cat > data/sierraleone-bumbuna.csv << 'EOF'
+            Timestamp,GHI,DNI,DHI,TA,RH,WS,WD,WSG
+            2023-01-01 00:00:00,0,0,0,22.5,80,2.1,180,3.5
+            2023-01-01 12:00:00,800,600,200,28.0,60,1.5,90,2.0
+            2023-01-01 18:00:00,100,50,50,26.5,70,2.0,270,3.0
+          EOF
+          echo "✅ Mock CSV created (3 rows for EDA test)"
