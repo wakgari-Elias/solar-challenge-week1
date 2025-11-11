@@ -1,34 +1,35 @@
-data/
-*.csv
-.ipynb_checkpoints/
-# Python
-__pycache__/
-*.pyc
-
-# Virtual env
-venv/
-
-# Data
+# Data (never commit CSVs/large files)
 data/
 *.csv
 
 # Jupyter
 .ipynb_checkpoints/
-
-# VSCode
-.vscode/
-# Data
-data/
-*.csv
-.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # Python
-.venv/
-env/
-venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg
+*.egg-info/
+.eggs/
+
+# Virtual env
+.venv/
+venv/
+env/
+ENV/
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# OS generated
+.DS_Store
+Thumbs.db
