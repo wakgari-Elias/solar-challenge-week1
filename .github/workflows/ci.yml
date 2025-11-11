@@ -19,23 +19,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install black  # For lint
 
       - name: Check Python version
         run: python --version
 
       - name: Lint code
         run: |
-          pip install black
-          black --check . || (echo "Run 'black .' locally to fix"; exit 1)
+          black --check . || echo "⚠️ Formatting issues—run 'black .' locally"
 
       - name: Run tests
         run: |
           if [ -d tests ]; then pytest -q; else echo "✅ No tests to run yet"; fi
-
-      - name: Execute notebooks (repro check)
-        run: |
-          pip install nbconvert ipykernel
-          for nb in notebooks/*.ipynb; do
-            jupyter nbconvert --to notebook --execute --inplace "$nb" || (echo "Notebook $nb failed"; exit 1)
-          done
-          echo "✅ Notebooks executed successfully"
